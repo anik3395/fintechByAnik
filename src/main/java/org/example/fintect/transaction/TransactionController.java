@@ -8,6 +8,7 @@ import org.example.fintect.transaction.utils.TransactionEndPointUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -24,5 +25,10 @@ public class TransactionController {
     @PostMapping(TransactionEndPointUtils.CREATE_BALANCE_TRANSFER)
     public ResponseEntity<ApiResponse> createBalanceTransfer(@RequestBody BalanceTransferReqModel  balanceTransferReqModel) {
         return new ResponseEntity<>(transactionService.createBalanceTransfer(balanceTransferReqModel), HttpStatus.OK);
+    }
+
+    @GetMapping(TransactionEndPointUtils.FETCH_ALL_TRANSACTIONS)
+    public ResponseEntity<ApiResponse> fetchAllTransactions() {
+        return new ResponseEntity<>(transactionService.fetchAllTransactions(),HttpStatus.OK);
     }
 }

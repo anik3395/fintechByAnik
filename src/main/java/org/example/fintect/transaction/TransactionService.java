@@ -19,9 +19,11 @@ import org.example.fintect.transaction.model.BalanceTransferReqModel;
 import org.example.fintect.transaction.model.DepositRequestModel;
 import org.example.fintect.user.Role;
 import org.example.fintect.user.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -59,25 +61,25 @@ public class TransactionService {
             throw new InvalidDataException("Please Approve first this customer");
         }
 
-        if (adminAccount.getBalance().compareTo(depositRequestModel.getAmount()) < 0) {
+        BigDecimal amount = depositRequestModel.getAmount();
+
+        if (adminAccount.getBalance().compareTo(amount) < 0) {
             throw new InvalidDataException("Insufficient admin balance");
         }
 
         // ===============================
-        // CREATE PENDING TRANSACTION
+        // CREATE MAIN TRANSACTION (PENDING)
         // ===============================
 
         Transaction transaction = new Transaction();
         transaction.setSenderAccountNo(adminAccount);
         transaction.setReceiverAccountNo(customerAccount);
-        transaction.setAmount(depositRequestModel.getAmount());
+        transaction.setAmount(amount);
         transaction.setTransactionType(TransactionType.DEPOSIT);
         transaction.setTransactionStatus(TransactionStatus.PENDING);
         transaction.setTxId(successGenerateTxId());
         transaction.setRemarks(depositRequestModel.getRemarks());
         transactionRepository.save(transaction);
-
-        BigDecimal amount = depositRequestModel.getAmount();
 
         try {
 
@@ -92,14 +94,14 @@ public class TransactionService {
             accountRepository.save(customerAccount);
 
             // ===============================
-            // SAVE SUCCESS STATUS (FIRST ROW)
+            // MARK SUCCESS
             // ===============================
 
             transaction.setTransactionStatus(TransactionStatus.SUCCESS);
             transactionRepository.save(transaction);
 
             // ===============================
-            // SAVE STATEMENTS
+            // SAVE SUCCESS STATEMENTS
             // ===============================
 
             Statement adminStatement = new Statement();
@@ -129,7 +131,7 @@ public class TransactionService {
             // ===============================
 
             if (new Random().nextBoolean()) {
-                throw new Exception("Simulated failure");
+                throw new RuntimeException("Simulated failure");
             }
 
             return ApiResponse.success("Deposit Success", null);
@@ -147,18 +149,18 @@ public class TransactionService {
             accountRepository.save(customerAccount);
 
             // ===============================
-            // SAVE FAILED TRANSACTION (SECOND ROW)
+            // CREATE REVERSAL TRANSACTION
             // ===============================
 
-            Transaction failedTransaction = new Transaction();
-            failedTransaction.setSenderAccountNo(adminAccount);
-            failedTransaction.setReceiverAccountNo(customerAccount);
-            failedTransaction.setAmount(amount);
-            failedTransaction.setTransactionType(TransactionType.DEPOSIT);
-            failedTransaction.setTransactionStatus(TransactionStatus.FAILED);
-            failedTransaction.setTxId(successGenerateTxId());
-            failedTransaction.setRemarks("Business failure after success");
-            transactionRepository.save(failedTransaction);
+            Transaction reversalTransaction = new Transaction();
+            reversalTransaction.setSenderAccountNo(customerAccount);
+            reversalTransaction.setReceiverAccountNo(adminAccount);
+            reversalTransaction.setAmount(amount);
+            reversalTransaction.setTransactionType(TransactionType.DEPOSIT);
+            reversalTransaction.setTransactionStatus(TransactionStatus.FAILED);
+            reversalTransaction.setTxId(successGenerateTxId());
+            reversalTransaction.setRemarks("Reversal of TXID: " + transaction.getTxId());
+            transactionRepository.save(reversalTransaction);
 
             // ===============================
             // SAVE REVERSAL STATEMENTS
@@ -166,22 +168,22 @@ public class TransactionService {
 
             Statement adminReversal = new Statement();
             adminReversal.setAccount(adminAccount);
-            adminReversal.setTransaction(failedTransaction);
+            adminReversal.setTransaction(reversalTransaction);
             adminReversal.setDebit(BigDecimal.ZERO);
             adminReversal.setCredit(amount);
             adminReversal.setAfterBalance(adminAccount.getBalance());
-            adminReversal.setTxId(failedTransaction.getTxId());
+            adminReversal.setTxId(reversalTransaction.getTxId());
             adminReversal.setAmount(amount);
             adminReversal.setDescription("REVERSAL - Deposit failed");
             statementRepository.save(adminReversal);
 
             Statement customerReversal = new Statement();
             customerReversal.setAccount(customerAccount);
-            customerReversal.setTransaction(failedTransaction);
+            customerReversal.setTransaction(reversalTransaction);
             customerReversal.setDebit(amount);
             customerReversal.setCredit(BigDecimal.ZERO);
             customerReversal.setAfterBalance(customerAccount.getBalance());
-            customerReversal.setTxId(failedTransaction.getTxId());
+            customerReversal.setTxId(reversalTransaction.getTxId());
             customerReversal.setAmount(amount);
             customerReversal.setDescription("REVERSAL - Deposit failed");
             statementRepository.save(customerReversal);
@@ -292,5 +294,21 @@ public class TransactionService {
                 .replace("-", "")
                 .substring(0, 10)
                 .toUpperCase();
+    }
+
+    public ApiResponse fetchAllTransactions() {
+
+            List<Transaction> transactionList = transactionRepository.findAll();
+
+            if (transactionList.isEmpty()) {
+               throw new InvalidDataException("No transactions found");
+            }
+
+            return new ApiResponse(
+                    true,
+                    "All transactions fetched successfully",
+                    transactionList
+            );
+
     }
 }
