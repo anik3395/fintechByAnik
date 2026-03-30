@@ -19,7 +19,7 @@ public class DailySummaryService {
     private final DailySummaryRepository dailySummaryRepository;
 
     // ✅ Scheduler
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 4 0 * * *")
     public void dailyAccountSummary() {
 
         LocalDate targetDate = LocalDate.now().minusDays(1);

@@ -10,9 +10,9 @@ public class DailySummaryController {
 
     private final DailySummaryService dailySummaryService;
 
-    @PostMapping("/run")
-    public String runSummary() {
-        dailySummaryService.dailyAccountSummary();
-        return "Daily summary executed successfully!";
-    }
+//    @PostMapping("/run")
+//    public String runSummary() {
+//        dailySummaryService.dailyAccountSummary();
+//        return "Daily summary executed successfully!";
+//    }
 }
