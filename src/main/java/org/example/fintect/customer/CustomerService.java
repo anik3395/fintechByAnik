@@ -9,6 +9,7 @@ import org.example.fintect.response.ApiResponse;
 import org.example.fintect.user.Role;
 import org.example.fintect.user.User;
 import org.example.fintect.user.UsersRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -129,5 +130,23 @@ public class CustomerService {
         customer.setStatus(status);
         customerRepository.save(customer);
         return ApiResponse.success("Customer status updated successfully", HttpStatus.OK);
+    }
+
+
+
+    @Cacheable(value = "customer", key = "#email")
+    public ApiResponse fetchCustomerById(String email) {
+
+
+        Customer customer = customerRepository.findByEmail(email);
+        if(customer == null){
+            throw new InvalidDataException("Customer not found");
+        }
+        return ApiResponse.builder()
+                .success(true)
+                .message("Customer fetched successfully")
+                .data(customer)
+                .build();
+
     }
 }

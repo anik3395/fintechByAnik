@@ -2,6 +2,8 @@ package org.example.fintect.account;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.fintect.account.enumType.AccountStatus;
 import org.example.fintect.account.enumType.AccountType;
 import org.example.fintect.customer.Customer;
@@ -11,7 +13,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Account {
 
         @Id

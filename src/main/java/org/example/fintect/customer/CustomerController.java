@@ -38,6 +38,11 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.updateCustomerStatus(email,status),HttpStatus.OK);
     }
 
+    @GetMapping(CustomerEndPointUtils.GET_CUSTOMER_BY_ID)
+    public ResponseEntity<ApiResponse> fetchCustomerById(@RequestParam String email){
+        return new ResponseEntity<>(customerService.fetchCustomerById(email),HttpStatus.OK);
+    }
+
 
 
 
