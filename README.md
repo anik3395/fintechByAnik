@@ -1,1 +1,1 @@
-# Fintect
+# fintechByAnik
