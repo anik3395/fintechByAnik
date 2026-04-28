@@ -8,5 +8,6 @@ public enum AccountType {
     STUDENT,
     CORPORATE,
     NATIONAL,
-    CARD
+    CARD,
+    DEPOSIT
 }
