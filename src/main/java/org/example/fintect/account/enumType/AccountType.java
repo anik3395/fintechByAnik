@@ -6,5 +6,7 @@ public enum AccountType {
     FIXED_DEPOSIT,
     RECURRING_DEPOSIT,
     STUDENT,
-    CORPORATE
+    CORPORATE,
+    NATIONAL,
+    CARD
 }
