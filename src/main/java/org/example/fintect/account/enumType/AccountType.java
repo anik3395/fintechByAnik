@@ -9,5 +9,7 @@ public enum AccountType {
     CORPORATE,
     NATIONAL,
     CARD,
-    DEPOSIT
+    DEPOSIT,
+    GLOBAL,
+    OTHER;
 }
