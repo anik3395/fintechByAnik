@@ -24,8 +24,19 @@ public class demoStream2 {
                 filteredOfList.stream()
                         .map(n -> n / 2) //process data on previous data.
                         .distinct() //Prevent duplicate value.
+                        .sorted((a,b) -> (b - a)) // Sorted data as ASC by default. but in here use custom DESC.
+                        .skip(1) // Skip the first data from list.
                         .collect(Collectors.toList());
         System.out.println(mappedOfList);
+
+
+        long totalCount =
+                mappedOfList.stream()
+                        .map(n -> n / 2)
+                        .distinct()
+                        .count(); // count() is a terminal operation
+
+        System.out.println(totalCount);
 
     }
 }
