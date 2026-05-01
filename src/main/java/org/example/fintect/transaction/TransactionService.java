@@ -17,12 +17,17 @@ import org.example.fintect.statement.Statement;
 import org.example.fintect.statement.StatementRepository;
 import org.example.fintect.transaction.model.BalanceTransferReqModel;
 import org.example.fintect.transaction.model.DepositRequestModel;
+import org.example.fintect.transaction.specification.TransactionSpecification;
 import org.example.fintect.user.Role;
 import org.example.fintect.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -296,19 +301,29 @@ public class TransactionService {
                 .toUpperCase();
     }
 
-    public ApiResponse fetchAllTransactions() {
+    public ApiResponse<Page<Transaction>> fetchAllTransactions(
+            String senderAccountNo,
+            String receiverAccountNo,
+            BigDecimal amountMin,
+            BigDecimal amountMax,
+            TransactionType transactionType,
+            TransactionStatus transactionStatus,
+            String txId,
+            String remarks,
+            LocalDateTime createdAtFrom,
+            LocalDateTime createdAtTo,
+            Pageable pageable) {
 
-            List<Transaction> transactionList = transactionRepository.findAll();
+        Specification<Transaction> spec = TransactionSpecification.withFilters(
+                senderAccountNo, receiverAccountNo, amountMin, amountMax, transactionType, transactionStatus, txId, remarks, createdAtFrom, createdAtTo
+        );
 
-            if (transactionList.isEmpty()) {
-               throw new InvalidDataException("No transactions found");
-            }
+        Page<Transaction> transactionPage = transactionRepository.findAll(spec, pageable);
 
-            return new ApiResponse(
-                    true,
-                    "All transactions fetched successfully",
-                    transactionList
-            );
+        if (transactionPage.isEmpty()) {
+            throw new InvalidDataException("No transactions found");
+        }
 
+        return ApiResponse.success("Transactions fetched successfully", transactionPage);
     }
 }
