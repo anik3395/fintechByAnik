@@ -34,7 +34,7 @@ public class demoStream2 {
                 mappedOfList.stream()
                         .map(n -> n / 2)
                         .distinct()
-                        .count(); // count() is a terminal operation
+                        .count(); // count() is a terminal operations that return the total number of elements in the stream after processing.
 
         System.out.println(totalCount);
 
