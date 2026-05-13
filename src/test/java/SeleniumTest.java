@@ -5,7 +5,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class SeleniumTest {
     public static void main(String[] args) throws InterruptedException {
-//        System.out.println("Hello World");
 
         WebDriver driver = new ChromeDriver();
 
@@ -19,13 +18,53 @@ public class SeleniumTest {
 
         Thread.sleep(2000);
 //        By locator = By.linkText("Login");
-        By locator = By.cssSelector("a[href='/Account/Login']");
+//        By locator = By.cssSelector("a[href='/Account/Login']");
+//
+//        Thread.sleep(2000);
+//        WebElement element = driver.findElement(locator);
+//
+//        Thread.sleep(2000);
+//        element.click();
 
-        Thread.sleep(2000);
-        WebElement element = driver.findElement(locator);
+        driver.findElement(By.cssSelector("a[href='/Account/Login']")).click();
 
-        Thread.sleep(2000);
-        element.click();
+//        Thread.sleep(2000);
+//        By txUsername = By.name("UserName");
+//
+//        Thread.sleep(2000);
+//        WebElement txUserNameElement = driver.findElement(txUsername);
+//
+//        Thread.sleep(1000);
+//        txUserNameElement.sendKeys("anikkk");
+
+        driver.findElement(By.name("UserName")).sendKeys("anikkk");
+
+        String[] passwords = {"111111", "222222", "333333", "123456"};
+
+        for (String password : passwords) {
+
+            By txPassword = By.name("Password");
+
+            WebElement txPasswordElement = driver.findElement(txPassword);
+
+            txPasswordElement.clear();
+
+            Thread.sleep(1000);
+
+            txPasswordElement.sendKeys(password);
+
+            Thread.sleep(1000);
+
+            By btnSignIn = By.cssSelector("button[type='submit']");
+
+            WebElement btnSignInElement = driver.findElement(btnSignIn);
+
+            btnSignInElement.click();
+
+            Thread.sleep(3000);
+
+            System.out.println("Attempted password: " + password);
+        }
 //
 //        Thread.sleep(2000);
 //
