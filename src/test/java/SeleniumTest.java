@@ -2,13 +2,40 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class SeleniumTest {
+
+    static WebDriver driver;
+
     public static void main(String[] args) throws InterruptedException {
 
-        WebDriver driver = new ChromeDriver();
+        startBrowser();
+
+        loginProcess();
+
+        employeeNavigation();
+
+        searchEmployee();
+
+        clearSearch();
+
+    }
+
+    // ===========================
+    // Browser Start
+    // ===========================
+
+    public static void startBrowser() throws InterruptedException {
+
+        driver = new ChromeDriver();
 
         Thread.sleep(2000);
+
+        System.out.println("Navigating to application...");
 
         driver.navigate().to("http://eaapp.somee.com/");
 
@@ -16,77 +43,129 @@ public class SeleniumTest {
 
         driver.manage().window().maximize();
 
+        System.out.println("Browser maximized.");
+
         Thread.sleep(2000);
-//        By locator = By.linkText("Login");
-//        By locator = By.cssSelector("a[href='/Account/Login']");
-//
-//        Thread.sleep(2000);
-//        WebElement element = driver.findElement(locator);
-//
-//        Thread.sleep(2000);
-//        element.click();
+    }
+
+    // ===========================
+    // Login Process
+    // ===========================
+
+    public static void loginProcess() throws InterruptedException {
+
+        System.out.println("Opening Login Page...");
 
         driver.findElement(By.cssSelector("a[href='/Account/Login']")).click();
 
-//        Thread.sleep(2000);
-//        By txUsername = By.name("UserName");
-//
-//        Thread.sleep(2000);
-//        WebElement txUserNameElement = driver.findElement(txUsername);
-//
-//        Thread.sleep(1000);
-//        txUserNameElement.sendKeys("anikkk");
+        Thread.sleep(2000);
+
+        System.out.println("Entering Username...");
 
         driver.findElement(By.name("UserName")).sendKeys("anikkk");
 
-        String[] passwords = {"111111", "222222", "333333", "123456"};
+        String[] passwords = {"111111", "123456"};
 
         for (String password : passwords) {
 
-            By txPassword = By.name("Password");
+            WebElement passwordField = driver.findElement(By.name("Password"));
 
-            WebElement txPasswordElement = driver.findElement(txPassword);
-
-            txPasswordElement.clear();
+            passwordField.clear();
 
             Thread.sleep(1000);
 
-            txPasswordElement.sendKeys(password);
+            passwordField.sendKeys(password);
 
             Thread.sleep(1000);
 
-            By btnSignIn = By.cssSelector("button[type='submit']");
-
-            WebElement btnSignInElement = driver.findElement(btnSignIn);
-
-            btnSignInElement.click();
+            driver.findElement(By.cssSelector("button[type='submit']")).click();
 
             Thread.sleep(3000);
 
             System.out.println("Attempted password: " + password);
         }
-//
-//        Thread.sleep(2000);
-//
-//        System.out.println("Current URL: " + driver.getCurrentUrl());
-//
-//        String source = driver.getPageSource();
-//        if(source.contains("Search with Microsoft Bing and use the power of AI to find information")){
-//            System.out.println("Found Microsoft and Bing");
-//        }else {
-//            System.out.println("Not Found Microsoft and Bing");
-//        }
-//
-//        for(var handler : driver.getWindowHandles()){
-//            System.out.println("My browser current handle : " + handler);
-//        }
-//
-////        driver.manage().window().minimize();
-////
-////        Thread.sleep(2000);
-////
-////        driver.close();
 
-        //ABC
+        System.out.println("Login process completed.");
+
+        Thread.sleep(2000);
     }
+
+    // ===========================
+    // Navigate Employee Page
+    // ===========================
+
+    public static void employeeNavigation() throws InterruptedException {
+
+        System.out.println("Navigating to Employee page...");
+
+        driver.findElement(By.cssSelector("a[href='/Employee']")).click();
+
+        Thread.sleep(3000);
+
+        System.out.println("Employee page opened successfully.");
+    }
+
+    // ===========================
+    // Employee Search
+    // ===========================
+
+    public static void searchEmployee() {
+
+        System.out.println("Starting employee search...");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.name("searchTerm")));
+
+        String[] searchNames = {
+                "John Anderson",
+                "John Smith",
+                "Michael Johnson",
+                "WrongUser",
+                "NothingFound"
+        };
+
+        for (String name : searchNames) {
+
+            WebElement searchBox = driver.findElement(By.name("searchTerm"));
+
+            searchBox.clear();
+
+            searchBox.sendKeys(name);
+
+            driver.findElement(By.cssSelector("button.btn-search")).click();
+
+            System.out.println("Searched for: " + name);
+
+            String pageSource = driver.getPageSource();
+
+            if (pageSource.contains(name)) {
+                System.out.println("Found : " + name);
+            } else {
+                System.out.println("Not Found : " + name);
+            }
+
+            System.out.println("----------------------------");
+        }
+    }
+
+    // ===========================
+    // Clear Search
+    // ===========================
+
+    public static void clearSearch() throws InterruptedException {
+
+        System.out.println("Clearing search...");
+
+        driver.findElement(By.linkText("✕ Clear")).click();
+
+        Thread.sleep(2000);
+
+        System.out.println("Search cleared successfully.");
+    }
+
+    // ===========================
+    // Close Browser
+    // ===========================
+
 }
