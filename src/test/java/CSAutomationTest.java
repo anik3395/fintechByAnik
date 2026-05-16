@@ -5,8 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+
 import java.time.Duration;
 
 public class CSAutomationTest {
@@ -224,7 +223,7 @@ public class CSAutomationTest {
 
         Thread.sleep(2000);
 
-        driver.findElement(By.cssSelector("input[name='name']")).sendKeys("AKDGHGH");
+        driver.findElement(By.cssSelector("input[name='name']")).sendKeys("CS AUTOMATION CATEGORY");
 
         Thread.sleep(1000);
 
@@ -242,14 +241,14 @@ public class CSAutomationTest {
 
         System.out.println("File uploaded: " + filePath);
         // ---------------- STATUS: INACTIVE ----------------
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         driver.findElement(By.xpath("//button[contains(text(),'Inactive')]")).click();
 
         System.out.println("Status set to Inactive");
 
         // ---------------- CREATE BUTTON ----------------
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
@@ -269,7 +268,7 @@ public class CSAutomationTest {
                 {"Electronics", "Test Description", ""},
                 {"@#$%^", "Invalid Name", "1"},
                 {"Electronics", "Test Description", "-1"},
-                {"Electronics", "Test Description", "99999"}
+                {"CS AUTOMATION 2", "Test Description", "99999"}
         };
 
         for (String[] data : negativeData) {
@@ -295,6 +294,7 @@ public class CSAutomationTest {
             nameField.clear();
             nameField.sendKeys(name);
 
+            Thread.sleep(2000);
             // ================= DESCRIPTION =================
             WebElement descriptionField = driver.findElement(
                     By.cssSelector("textarea[name='description']")
@@ -303,6 +303,7 @@ public class CSAutomationTest {
             descriptionField.clear();
             descriptionField.sendKeys(description);
 
+            Thread.sleep(2000);
             // ================= POSITION =================
             WebElement positionField = driver.findElement(
                     By.cssSelector("input[name='position']")
@@ -311,10 +312,12 @@ public class CSAutomationTest {
             positionField.clear();
             positionField.sendKeys(position);
 
+            Thread.sleep(2000);
             // ================= FILE =================
             String filePath = System.getProperty("user.home") + "/imagesGift Card_7dc0990d-84be-4214-8ebc-97659a9d104c.svg";
 
 
+            Thread.sleep(2000);
             WebElement uploadInput = wait.until(
                     ExpectedConditions.presenceOfElementLocated(
                             By.cssSelector("input[type='file']")
@@ -323,11 +326,13 @@ public class CSAutomationTest {
 
             uploadInput.sendKeys(filePath);
 
+            Thread.sleep(2000);
             // ================= STATUS =================
             driver.findElement(
                     By.xpath("//button[contains(text(),'Inactive')]")
             ).click();
 
+            Thread.sleep(2000);
             // ================= CREATE =================
             driver.findElement(
                     By.cssSelector("button[type='submit']")
