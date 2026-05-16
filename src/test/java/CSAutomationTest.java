@@ -33,6 +33,7 @@ public class CSAutomationTest {
         goToCategories();
         clickAddCategory();
         inputFieldForAddCategory();
+        negativeCategoryTests();
 
     }
 
@@ -223,41 +224,150 @@ public class CSAutomationTest {
 
         Thread.sleep(2000);
 
-        driver.findElement(By.cssSelector("input[name='name']"))
-                .sendKeys("767575");
+        driver.findElement(By.cssSelector("input[name='name']")).sendKeys("AKDGHGH");
 
         Thread.sleep(1000);
 
-        driver.findElement(By.cssSelector("textarea[name='description']"))
-                .sendKeys("This is electronics category");
+        driver.findElement(By.cssSelector("textarea[name='description']")).sendKeys("This is electronics category");
 
         Thread.sleep(1000);
 
-        driver.findElement(By.cssSelector("input[name='position']"))
-                .sendKeys("1");
+        driver.findElement(By.cssSelector("input[name='position']")).sendKeys("1");
 
         // ---------------- FILE UPLOAD FIX ----------------
         Thread.sleep(1000);
         String filePath = System.getProperty("user.home") + "/imagesGift Card_7dc0990d-84be-4214-8ebc-97659a9d104c.svg";
 
-        driver.findElement(By.cssSelector("input[type='file']"))
-                .sendKeys(filePath);
+        driver.findElement(By.cssSelector("input[type='file']")).sendKeys(filePath);
 
         System.out.println("File uploaded: " + filePath);
         // ---------------- STATUS: INACTIVE ----------------
         Thread.sleep(5000);
 
-        driver.findElement(By.xpath("//button[contains(text(),'Inactive')]"))
-                .click();
+        driver.findElement(By.xpath("//button[contains(text(),'Inactive')]")).click();
 
         System.out.println("Status set to Inactive");
 
         // ---------------- CREATE BUTTON ----------------
         Thread.sleep(5000);
 
-        driver.findElement(By.cssSelector("button[type='submit']"))
-                .click();
+        driver.findElement(By.cssSelector("button[type='submit']")).click();
 
         System.out.println("Category form submitted successfully.");
     }
+
+    // ==================================================
+    // NEGATIVE CATEGORY TESTS
+    // ==================================================
+    public static void negativeCategoryTests()
+            throws InterruptedException {
+
+        String[][] negativeData = {
+
+                {"", "This is electronics category", "1"},
+                {"Electronics", "", "1"},
+                {"Electronics", "Test Description", ""},
+                {"@#$%^", "Invalid Name", "1"},
+                {"Electronics", "Test Description", "-1"},
+                {"Electronics", "Test Description", "99999"}
+        };
+
+        for (String[] data : negativeData) {
+
+            // ================= REOPEN MODAL =================
+            Thread.sleep(3000);
+
+            clickAddCategory();
+
+            String name = data[0];
+            String description = data[1];
+            String position = data[2];
+
+            Thread.sleep(2000);
+
+            // ================= NAME =================
+            WebElement nameField = wait.until(
+                    ExpectedConditions.elementToBeClickable(
+                            By.cssSelector("input[name='name']")
+                    )
+            );
+
+            nameField.clear();
+            nameField.sendKeys(name);
+
+            // ================= DESCRIPTION =================
+            WebElement descriptionField = driver.findElement(
+                    By.cssSelector("textarea[name='description']")
+            );
+
+            descriptionField.clear();
+            descriptionField.sendKeys(description);
+
+            // ================= POSITION =================
+            WebElement positionField = driver.findElement(
+                    By.cssSelector("input[name='position']")
+            );
+
+            positionField.clear();
+            positionField.sendKeys(position);
+
+            // ================= FILE =================
+            String filePath = System.getProperty("user.home") + "/imagesGift Card_7dc0990d-84be-4214-8ebc-97659a9d104c.svg";
+
+
+            WebElement uploadInput = wait.until(
+                    ExpectedConditions.presenceOfElementLocated(
+                            By.cssSelector("input[type='file']")
+                    )
+            );
+
+            uploadInput.sendKeys(filePath);
+
+            // ================= STATUS =================
+            driver.findElement(
+                    By.xpath("//button[contains(text(),'Inactive')]")
+            ).click();
+
+            // ================= CREATE =================
+            driver.findElement(
+                    By.cssSelector("button[type='submit']")
+            ).click();
+
+            System.out.println("Negative Test Executed");
+            System.out.println("Name: " + name);
+            System.out.println("Description: " + description);
+            System.out.println("Position: " + position);
+
+            Thread.sleep(3000);
+
+            // ================= VALIDATION =================
+            try {
+
+                WebElement error = wait.until(
+                        ExpectedConditions.visibilityOfElementLocated(
+                                By.xpath(
+                                        "//*[contains(text(),'required') " +
+                                                "or contains(text(),'invalid') " +
+                                                "or contains(text(),'error')]"
+                                )
+                        )
+                );
+
+                System.out.println("Validation Message: "
+                        + error.getText());
+
+            } catch (Exception e) {
+
+                System.out.println("No Validation Message Found");
+            }
+
+            // ================= CLOSE MODAL =================
+            driver.navigate().refresh();
+
+            Thread.sleep(3000);
+
+            goToCategories();
+        }
+    }
+
 }
