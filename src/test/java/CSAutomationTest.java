@@ -223,7 +223,7 @@ public class CSAutomationTest {
 
         Thread.sleep(2000);
 
-        driver.findElement(By.cssSelector("input[name='name']")).sendKeys("CS AUTOMATION CATEGORY");
+        driver.findElement(By.cssSelector("input[name='name']")).sendKeys("CS AUTOMATION CATEGORY6");
 
         Thread.sleep(1000);
 
