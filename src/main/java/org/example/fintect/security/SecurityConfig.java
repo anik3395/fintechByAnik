@@ -37,7 +37,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/public/**","/api/v1/private/account/statement/summary","/redis-test", "/fetch/customer-by-id").permitAll()
+                        .requestMatchers("/api/v1/public/**","/api/v1/private/account/statement/summary",
+                                "/redis-test", "/fetch/customer-by-id",
+                                "/create/usered","/fetch/usered/{id}").permitAll()
                         .requestMatchers("/run").permitAll()
                         .requestMatchers("/api/v1/customer/**").hasRole("CUSTOMER")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
