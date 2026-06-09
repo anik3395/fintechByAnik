@@ -1,8 +1,10 @@
-package org.example.fintect.encryptdecrypt.eesponsemodel;
+package org.example.fintect.encryptdecrypt.responsemodel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import org.example.fintect.encryptdecrypt.entity.Address;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,4 +16,7 @@ public class UserResponse {
     private String email;
 
     private String phoneNumber;
+
+
+    private List<Address> addresses;
 }

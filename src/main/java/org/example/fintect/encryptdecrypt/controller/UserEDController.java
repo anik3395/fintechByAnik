@@ -1,11 +1,9 @@
 package org.example.fintect.encryptdecrypt.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.fintect.encryptdecrypt.eesponsemodel.UserResponse;
-import org.example.fintect.encryptdecrypt.entity.UserED;
+import org.example.fintect.encryptdecrypt.responsemodel.UserResponse;
 import org.example.fintect.encryptdecrypt.requestemodel.UserRequest;
 import org.example.fintect.encryptdecrypt.service.UserEDService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

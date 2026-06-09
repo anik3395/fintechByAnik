@@ -1,9 +1,6 @@
 package org.example.fintect.encryptdecrypt.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -19,4 +16,7 @@ public class UserED {
     private String email;
 
     private String phoneNumber;
+
+    @Column(columnDefinition = "TEXT")
+    private String addresses;
 }
