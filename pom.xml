@@ -122,11 +122,29 @@
             <scope>test</scope>
         </dependency>
 
+
+<!--        //Selenium dependency for web automation testing-->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.33.0</version>
         </dependency>
+
+<!--        //Playwright dependency for web automation testing-->
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>1.60.0</version>
+        </dependency>
+
+<!--        //TestNG dependency for testing framework-->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.12.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
