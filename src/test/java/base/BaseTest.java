@@ -35,6 +35,8 @@ public class BaseTest {
                 launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(1000));
 
          page = browser.newPage();
+        page.setDefaultTimeout(30000);           // 30s for actions like click/fill
+        page.setDefaultNavigationTimeout(30000); // 30s specifically for navigate()
     }
 
     @AfterMethod
