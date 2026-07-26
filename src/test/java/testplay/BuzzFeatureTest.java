@@ -56,6 +56,13 @@ public class BuzzFeatureTest extends BaseTest {
         page.waitForTimeout(2000);
         test.info("Selected a photo to upload");
 
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Share").setExact(true)).click();
+        test.info("Clicked on the Share button to post the buzz with photo");
+        page.waitForTimeout(2000);
+        assertThat(page.getByText(postText).first())
+                .isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(10000));
+        test.pass("Positive Test Passed: Buzz post created successfully");
+
     }
 
     private void loginAsAdmin() {

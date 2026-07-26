@@ -19,15 +19,22 @@ public class DailySummaryService {
     private final DailySummaryRepository dailySummaryRepository;
 
     // ✅ Scheduler
-    @Scheduled(cron = "0 4 0 * * *")
+    @Scheduled(cron = "0 22 23 * * *")
     public void dailyAccountSummary() {
+        System.out.println("Yes run the scheduled daily summary service");
 
         LocalDate targetDate = LocalDate.now().minusDays(1);
 
         LocalDateTime start = targetDate.atStartOfDay();
         LocalDateTime end = targetDate.plusDays(1).atStartOfDay();
 
+        System.out.println("Start : " + start);
+        System.out.println("End   : " + end);
+
         List<Statement> statementList = statementRepository.findAllByCreatedAtBetween(start, end);
+
+
+        System.out.println("Statement Count: " + statementList.size());
 
         List<DailyAccountSummary> dailyAccountSummaryList = new ArrayList<>();
 
@@ -68,6 +75,8 @@ public class DailySummaryService {
                 dailyAccountSummaryList.add(newSummary);
             }
         }
+
+        System.out.println("Summary Count: " + dailyAccountSummaryList.size());
 
         //calculate net
         for (DailyAccountSummary summary : dailyAccountSummaryList) {
