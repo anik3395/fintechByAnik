@@ -130,6 +130,12 @@
             <version>4.33.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.appium</groupId>
+            <artifactId>java-client</artifactId>
+            <version>10.0.0</version>
+        </dependency>
+
 <!--        //Playwright dependency for web automation testing-->
         <dependency>
             <groupId>com.microsoft.playwright</groupId>
