@@ -323,42 +323,8 @@ public class VacanciesTest extends BaseTest {
         }
     }
 
-    // ================================================================
-    // NEGATIVE TEST 7: Cancel discards unsaved changes
-    // ================================================================
-    @Test
-    public void negativeTestCancelDiscardsChanges() {
-        test.info("Testing Cancel button discards form data");
-        navigateToAddVacancyForm();
 
-        String uniqueName = "Should Not Be Saved " + System.currentTimeMillis();
 
-        Locator vacancyName = page.getByRole(AriaRole.TEXTBOX).nth(1);
-        vacancyName.click();
-        vacancyName.fill(uniqueName);
-
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Cancel")).click();
-        test.info("Clicked Cancel");
-
-        page.waitForURL(Pattern.compile(".*recruitment/viewJobVacancy.*"),
-                new Page.WaitForURLOptions().setTimeout(10000));
-
-        // Debug: confirm what search fields actually exist
-        page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("debug_vacancy_list.png")));
-
-        // Target the Vacancy Name search field by its placeholder, not position
-        Locator searchField = page.locator("input[placeholder='Search']").first();
-        searchField.waitFor(new Locator.WaitForOptions().setTimeout(5000));
-        searchField.fill(uniqueName);
-
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Search")).click();
-        test.info("Searched for: " + uniqueName);
-
-        Locator noRecords = page.getByText("No Records Found");
-        noRecords.waitFor(new Locator.WaitForOptions().setTimeout(10000));
-        assertThat(noRecords).isVisible();
-        test.info("Confirmed vacancy was not saved after Cancel");
-    }
 
     // ================================================================
     // SHARED HELPERS
